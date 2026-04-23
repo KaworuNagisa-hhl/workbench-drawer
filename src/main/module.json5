@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "drawer",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+      "tablet"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+export const DRAWER_DEFAULT_COLLAPSED_HEIGHT: number = 56
+export const DRAWER_DEFAULT_EXPANDED_HEIGHT: number = 700
+export const DRAWER_DEFAULT_WIDTH: string = '100%'
+export const DRAWER_DEFAULT_ANIMATION_DURATION: number = 180
+export const DRAWER_DEFAULT_DRAG_THRESHOLD: number = 12
+export const DRAWER_DEFAULT_HANDLE_AREA_HEIGHT: number = 24
+export const DRAWER_DEFAULT_HANDLE_WIDTH: number = 36
+export const DRAWER_DEFAULT_HANDLE_HEIGHT: number = 4
+export const DRAWER_DEFAULT_HANDLE_RADIUS: number = 2
+export const DRAWER_DEFAULT_TITLE_HEIGHT: number = 44
+export const DRAWER_DEFAULT_TITLE_FONT_SIZE: number = 16
+export const DRAWER_DEFAULT_CONTENT_PADDING: number = 16
+export const DRAWER_DEFAULT_BORDER_RADIUS: number = 16
+export const DRAWER_DEFAULT_SHADOW_RADIUS: number = 16
+export const DRAWER_DEFAULT_SHADOW_OFFSET_Y: number = -2
+export const DRAWER_DEFAULT_MAX_HEIGHT_RATIO: number = 0.92
+export const DRAWER_DEFAULT_MASK_OPACITY: number = 0.35
