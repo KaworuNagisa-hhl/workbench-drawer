@@ -17,6 +17,7 @@
 - 尺寸配置：支持设置收起高度、展开高度、最大高度比例和抽屉宽度。
 - 无业务依赖：不依赖接口、不依赖宿主工程资源、不依赖三方包。
 - 适配三方库发布：包含 `oh-package.json5`、`Index.ets`、`README.md`、`CHANGELOG.md`、`LICENSE`。
+- 提供示例：`example/WorkbenchDrawerDemo.ets` 可用于三方库平台识别和本地接入参考。
 
 ## 安装
 

@@ -12,6 +12,8 @@ drawer
 ├── README.md
 ├── USAGE_GUIDE.md
 ├── build-profile.json5
+├── example
+│   └── WorkbenchDrawerDemo.ets
 ├── examples
 │   └── WorkbenchDrawerDemo.ets
 ├── Index.ets
@@ -36,6 +38,7 @@ drawer
 - `src/main/ets/components/WorkbenchDrawer.ets`：类 iOS 底部抽屉组件主体。
 - `src/main/ets/model/DrawerTypes.ets`：对外枚举类型。
 - `src/main/ets/constants/DrawerConstants.ets`：默认尺寸和行为常量。
+- `example/WorkbenchDrawerDemo.ets`：三方库平台识别用示例。
 - `examples/WorkbenchDrawerDemo.ets`：本地验证示例。
 
 ## 2. 本地接入

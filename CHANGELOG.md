@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.3
+
+- 补充发布评分所需的 `homepage`、`repository` 元数据。
+- 新增 `example` 示例目录，便于三方库平台识别示例文档。
+
+## 1.0.2
+
+- 更新 README 效果预览为 CDN GIF 链接，提升 ohpm 仓库页面展示稳定性。
+- 补充 `homepage`、`repository` 元数据，并新增 `example` 示例目录。
+
 ## 1.0.1
 
 - 将包版本升级到 `1.0.1`，用于发布个人包名版本。

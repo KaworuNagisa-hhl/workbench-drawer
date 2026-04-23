@@ -1,10 +1,12 @@
 {
   "modelVersion": "6.0.2",
   "name": "workbench-drawer",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "An iOS-like bottom drawer component for OpenHarmony/HarmonyOS ArkUI, compatible with HarmonyOS API 12 and later.",
   "main": "Index.ets",
   "author": "Zuolin",
+  "homepage": "https://github.com/KaworuNagisa-hhl/workbench-drawer",
+  "repository": "https://github.com/KaworuNagisa-hhl/workbench-drawer",
   "license": "Apache-2.0",
   "keywords": [
     "OpenHarmony",
