@@ -6,7 +6,7 @@
 
 下面是组件的交互示意 Demo，展示底部抽屉收起、拖拽中、展开三种状态：
 
-![workbench drawer preview](https://raw.githubusercontent.com/KaworuNagisa-hhl/workbench-drawer/main/docs/workbench-drawer-preview.gif)
+![workbench drawer preview](https://cdn.jsdelivr.net/gh/KaworuNagisa-hhl/workbench-drawer@main/docs/workbench-drawer-preview.gif)
 
 ## 特性
 
