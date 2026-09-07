@@ -4,7 +4,7 @@
   "version": "1.0.6",
   "description": "适用于 OpenHarmony/HarmonyOS ArkUI 的 like-ios 毛玻璃底部抽屉组件，优化上拉下拉吸附动画、主页面滚动隔离与内容区点击体验，支持自定义颜色/宽高/圆角，兼容 HarmonyOS API 12 及以上版本。",
   "main": "Index.ets",
-  "author": "Zuolin",
+  "author": { "name": "KaworuNagisa-hhl", "url": "https://github.com/KaworuNagisa-hhl" },
   "homepage": "https://github.com/KaworuNagisa-hhl/workbench-drawer",
   "repository": "https://github.com/KaworuNagisa-hhl/workbench-drawer",
   "license": "Apache-2.0",
