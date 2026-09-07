@@ -1,8 +1,11 @@
 /node_modules
 /oh_modules
+/.hvigor
+/hvigor
 /.preview
 /build
 /.cxx
 /.test
+*.har
 .DS_Store
 .idea

@@ -29,5 +29,7 @@
 ## 发布建议
 
 - 发布前在独立 Demo 工程中通过 `file:../drawer` 安装验证。
+- 如果本地目录包含中文、空格或括号，优先复制到纯 ASCII 路径后再做 `hvigor` 构建校验，避免触发 `Invalid project path` 一类工具链限制。
+- 独立校验时建议显式设置 `DEVECO_SDK_HOME=/Applications/DevEco-Studio.app/Contents/sdk`，再执行 `hvigorw --stop-daemon` 后重试构建。
 - 执行平台要求的 ohpm 本地校验或 dry-run。
 - README 中保持安装、导入、默认用法、自定义用法、API 表完整。

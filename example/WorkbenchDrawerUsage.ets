@@ -1,7 +1,7 @@
 import { DrawerSnapMode, WorkbenchDrawer } from '../Index'
 
 @Builder
-function DemoTitleBuilder() {
+function DrawerTitleBuilder() {
   Row() {
     Text('任务')
       .fontSize(18)
@@ -20,14 +20,14 @@ function DemoTitleBuilder() {
 }
 
 @Builder
-function DemoContentBuilder() {
+function DrawerContentBuilder() {
   Column({ space: 12 }) {
     Text('我的待办')
       .fontSize(16)
       .fontWeight(FontWeight.Medium)
       .fontColor('#101828')
 
-    Text('这里替换成你的业务列表、Tabs 或其它内容。')
+    Text('这里放业务列表、Tabs 或其它内容。')
       .fontSize(14)
       .fontColor('#667085')
   }
@@ -40,7 +40,7 @@ function DemoContentBuilder() {
 
 @Entry
 @Component
-struct WorkbenchDrawerDemo {
+struct WorkbenchDrawerUsage {
   build() {
     Stack() {
       Column() {
@@ -54,18 +54,19 @@ struct WorkbenchDrawerDemo {
       .backgroundColor('#F2F4F7')
 
       WorkbenchDrawer({
-        title: '默认标题',
-        contentText: '默认内容区域',
+        title: '今日任务',
+        contentText: '上滑查看任务详情。',
         initialExpanded: false,
         collapsedHeight: 56,
         expandedHeight: 680,
+        drawerWidth: '100%',
         snapMode: DrawerSnapMode.DirectionAndHalf,
         showMask: false,
-        titleBuilder: DemoTitleBuilder,
-        contentBuilder: DemoContentBuilder,
-        onExpandedChange: (isExpanded: boolean) => {
-          console.info(`drawer expanded: ${isExpanded}`)
-        }
+        drawerBackgroundColor: '#E8FFFFFF',
+        drawerBorderRadius: 18,
+        contentPadding: 16,
+        titleBuilder: DrawerTitleBuilder,
+        contentBuilder: DrawerContentBuilder
       })
     }
     .width('100%')

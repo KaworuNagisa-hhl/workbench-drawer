@@ -1,33 +1,41 @@
 import { describe, beforeAll, beforeEach, afterEach, afterAll, it, expect } from '@ohos/hypium';
+import { clamp, shouldCaptureVerticalDrag, shouldSyncOverlaySize } from '../main/ets/utils/DrawerMath'
 
 export default function localUnitTest() {
   describe('localUnitTest', () => {
-    // Defines a test suite. Two parameters are supported: test suite name and test suite function.
     beforeAll(() => {
-      // Presets an action, which is performed only once before all test cases of the test suite start.
-      // This API supports only one parameter: preset action function.
     });
     beforeEach(() => {
-      // Presets an action, which is performed before each unit test case starts.
-      // The number of execution times is the same as the number of test cases defined by **it**.
-      // This API supports only one parameter: preset action function.
     });
     afterEach(() => {
-      // Presets a clear action, which is performed after each unit test case ends.
-      // The number of execution times is the same as the number of test cases defined by **it**.
-      // This API supports only one parameter: clear action function.
     });
     afterAll(() => {
-      // Presets a clear action, which is performed after all test cases of the test suite end.
-      // This API supports only one parameter: clear action function.
     });
     it('assertContain', 0, () => {
-      // Defines a test case. This API supports three parameters: test case name, filter parameter, and test case function.
       let a = 'abc';
       let b = 'b';
-      // Defines a variety of assertion methods, which are used to declare expected boolean conditions.
       expect(a).assertContain(b);
       expect(a).assertEqual(a);
+    });
+
+    it('shouldCaptureVerticalDrag_only_when_vertical_move_dominates_and_exceeds_threshold', 0, () => {
+      expect(shouldCaptureVerticalDrag(2, 12, 5)).assertTrue()
+      expect(shouldCaptureVerticalDrag(12, 12, 5)).assertFalse()
+      expect(shouldCaptureVerticalDrag(20, 12, 5)).assertFalse()
+      expect(shouldCaptureVerticalDrag(1, 4, 5)).assertFalse()
+    });
+
+    it('clamp_keeps_height_within_bounds', 0, () => {
+      expect(clamp(50, 60, 100)).assertEqual(60)
+      expect(clamp(80, 60, 100)).assertEqual(80)
+      expect(clamp(120, 60, 100)).assertEqual(100)
+    });
+
+    it('shouldSyncOverlaySize_only_when_mask_is_fullscreen_and_not_dragging', 0, () => {
+      expect(shouldSyncOverlaySize(false, false)).assertFalse()
+      expect(shouldSyncOverlaySize(false, true)).assertFalse()
+      expect(shouldSyncOverlaySize(true, true)).assertFalse()
+      expect(shouldSyncOverlaySize(true, false)).assertTrue()
     });
   });
 }

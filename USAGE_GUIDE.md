@@ -1,6 +1,6 @@
-# 类 iOS 底部抽屉操作说明文档
+# like-ios 底部抽屉操作说明文档
 
-本文档用于指导开发者在 OpenHarmony/HarmonyOS 项目中接入、验证、调试和发布 `workbench-drawer` 类 iOS 底部抽屉组件。当前发布包最低兼容 HarmonyOS API 12。
+本文档用于指导开发者在 OpenHarmony/HarmonyOS 项目中接入、验证、调试和发布 `workbench-drawer` like-ios 毛玻璃底部抽屉组件。当前发布包最低兼容 HarmonyOS API 12。
 
 ## 1. 目录说明
 
@@ -13,9 +13,9 @@ drawer
 ├── USAGE_GUIDE.md
 ├── build-profile.json5
 ├── example
-│   └── WorkbenchDrawerDemo.ets
+│   └── WorkbenchDrawerUsage.ets
 ├── examples
-│   └── WorkbenchDrawerDemo.ets
+│   └── WorkbenchDrawerUsage.ets
 ├── Index.ets
 ├── oh-package.json5
 └── src
@@ -38,8 +38,8 @@ drawer
 - `src/main/ets/components/WorkbenchDrawer.ets`：类 iOS 底部抽屉组件主体。
 - `src/main/ets/model/DrawerTypes.ets`：对外枚举类型。
 - `src/main/ets/constants/DrawerConstants.ets`：默认尺寸和行为常量。
-- `example/WorkbenchDrawerDemo.ets`：三方库平台识别用示例。
-- `examples/WorkbenchDrawerDemo.ets`：本地验证示例。
+- `example/WorkbenchDrawerUsage.ets`：三方库平台识别用接入页。
+- `examples/WorkbenchDrawerUsage.ets`：本地验证接入页。
 
 ## 2. 本地接入
 
@@ -69,6 +69,14 @@ drawer
 ohpm install
 ```
 
+如果本地目录包含中文、空格或括号，建议先复制到纯 ASCII 路径再做 `hvigor` 构建校验；当前 DevEco / hvigor 工具链在这类路径下可能报 `Invalid project path`。
+
+建议的本地构建环境变量：
+
+```bash
+export DEVECO_SDK_HOME='/Applications/DevEco-Studio.app/Contents/sdk'
+```
+
 ## 3. 基础使用
 
 在页面中导入：
@@ -77,12 +85,12 @@ ohpm install
 import { WorkbenchDrawer, DrawerSnapMode } from 'workbench-drawer'
 ```
 
-最小接入示例：
+最小接入方式：
 
 ```ts
 @Entry
 @Component
-struct DemoPage {
+struct TaskWorkbenchPage {
   build() {
     Stack() {
       Column() {
@@ -169,7 +177,18 @@ WorkbenchDrawer({
 
 ## 6. 拖拽配置
 
-### 6.1 允许内容区域拖拽
+### 6.1 默认仅标题/手柄区域拖拽
+
+```ts
+WorkbenchDrawer({
+  enableDrag: true,
+  enableContentDrag: false
+})
+```
+
+适合内容区域有复杂点击、横向滑动、纵向列表滚动的场景，也是组件默认行为。
+
+### 6.2 允许内容区域拖拽
 
 ```ts
 WorkbenchDrawer({
@@ -182,17 +201,6 @@ WorkbenchDrawer({
 
 - 标题区域可拖拽。
 - 内容区域也可上下拖拽。
-
-### 6.2 仅允许标题区域拖拽
-
-```ts
-WorkbenchDrawer({
-  enableDrag: true,
-  enableContentDrag: false
-})
-```
-
-适合内容区域有复杂点击、横向滑动、纵向列表滚动的场景。
 
 ### 6.3 禁止拖拽
 
@@ -214,7 +222,7 @@ DrawerSnapMode.Half
 DrawerSnapMode.DirectionAndHalf
 ```
 
-示例：
+接入方式：
 
 ```ts
 WorkbenchDrawer({
@@ -398,4 +406,4 @@ WorkbenchDrawer({
 - `Index.ets` 是否导出所有公开 API。
 - 发布包兼容说明是否与三方库中心展示一致：当前为 HarmonyOS API 12。
 - 代码中是否存在宿主工程业务依赖。
-- 是否在独立 Demo 工程中完成验证。
+- 是否在独立验证工程中完成验证。

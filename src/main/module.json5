@@ -1,10 +1,9 @@
 {
   "module": {
-    "name": "drawer",
+    "name": "workbench_drawer",
     "type": "har",
     "deviceTypes": [
-      "phone",
-      "tablet"
+      "default"
     ]
   }
 }

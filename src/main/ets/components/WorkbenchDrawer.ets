@@ -1,4 +1,5 @@
-import { clamp } from '../utils/DrawerMath'
+import display from '@ohos.display'
+import { clamp, shouldSyncOverlaySize } from '../utils/DrawerMath'
 import { DrawerSnapMode } from '../model/DrawerTypes'
 import {
   DRAWER_DEFAULT_ANIMATION_DURATION,
@@ -22,77 +23,77 @@ import {
 
 @Component
 export struct WorkbenchDrawer {
-  /** 默认标题文本，自定义标题区域存在时不展示 */
   @Prop title: ResourceStr = '任务'
-  /** 默认内容文本，自定义内容区域存在时不展示 */
   @Prop contentText: ResourceStr = '请通过 contentBuilder 自定义抽屉内容'
-  /** 初始是否展开 */
-  @Prop initialExpanded: boolean = false
-  /** 收起高度 */
+  @Prop @Watch('handleInitialExpandedChange') initialExpanded: boolean = false
   @Prop collapsedHeight: number = DRAWER_DEFAULT_COLLAPSED_HEIGHT
-  /** 展开高度。若父容器更矮，会自动按父容器高度裁剪 */
   @Prop expandedHeight: number = DRAWER_DEFAULT_EXPANDED_HEIGHT
-  /** 展开高度占父容器最大比例 */
   @Prop maxHeightRatio: number = DRAWER_DEFAULT_MAX_HEIGHT_RATIO
-  /** 抽屉面板宽度，支持百分比字符串或 vp 数值 */
   @Prop drawerWidth: Length = DRAWER_DEFAULT_WIDTH
-  /** 动画时长 */
   @Prop animationDuration: number = DRAWER_DEFAULT_ANIMATION_DURATION
-  /** 触发拖拽方向判定的最小距离 */
   @Prop dragThreshold: number = DRAWER_DEFAULT_DRAG_THRESHOLD
-  /** 吸附规则 */
   @Prop snapMode: DrawerSnapMode = DrawerSnapMode.DirectionAndHalf
-  /** 是否允许拖拽 */
   @Prop enableDrag: boolean = true
-  /** 是否允许从内容区拖拽。关闭后只有把手/标题区域可拖拽 */
-  @Prop enableContentDrag: boolean = true
-  /** 是否展示顶部把手 */
+  @Prop enableContentDrag: boolean = false
   @Prop showHandle: boolean = true
-  /** 是否展示遮罩 */
   @Prop showMask: boolean = false
-  /** 点击遮罩是否收起 */
   @Prop closeOnMaskClick: boolean = true
-  /** 抽屉整体背景色 */
-  @Prop drawerBackgroundColor: ResourceColor = Color.White
-  /** 页面遮罩颜色 */
+  @Prop enableTitleTapToggle: boolean = true
+  @Prop drawerBackgroundColor: ResourceColor = '#E8FFFFFF'
   @Prop maskColor: ResourceColor = '#000000'
-  /** 页面遮罩透明度 */
   @Prop maskOpacity: number = DRAWER_DEFAULT_MASK_OPACITY
-  /** 顶部圆角 */
   @Prop drawerBorderRadius: number = DRAWER_DEFAULT_BORDER_RADIUS
-  /** 标题栏高度 */
   @Prop titleHeight: number = DRAWER_DEFAULT_TITLE_HEIGHT
-  /** 内容默认内边距 */
   @Prop contentPadding: number = DRAWER_DEFAULT_CONTENT_PADDING
-  /** 抽屉阴影色 */
   @Prop shadowColor: ResourceColor = '#22000000'
-  /** 抽屉高度变化回调 */
   onHeightChange: (height: number) => void = () => {
   }
-  /** 展开/收起状态变化回调 */
   onExpandedChange: (isExpanded: boolean) => void = () => {
   }
-  /** 自定义标题区域。传入后会替换默认标题区域 */
   @BuilderParam titleBuilder?: () => void
-  /** 自定义内容区域。传入后会替换默认内容区域 */
   @BuilderParam contentBuilder?: () => void
 
   @State private drawerHeight: number = DRAWER_DEFAULT_COLLAPSED_HEIGHT
   @State private containerHeight: number = DRAWER_DEFAULT_EXPANDED_HEIGHT
   @State private isExpanded: boolean = false
 
-  private touchStartY: number = 0
   private dragStartHeight: number = DRAWER_DEFAULT_COLLAPSED_HEIGHT
   private lastOffsetY: number = 0
   private isDragging: boolean = false
 
   aboutToAppear(): void {
+    this.updateContainerHeightFromDisplay()
     this.isExpanded = this.initialExpanded
     this.drawerHeight = this.initialExpanded ? this.getSafeExpandedHeight() : this.getSafeCollapsedHeight()
   }
 
+  private updateContainerHeightFromDisplay(): void {
+    try {
+      const currentDisplay = display.getDefaultDisplaySync()
+      const displayHeight = currentDisplay.availableHeight > 0 ? currentDisplay.availableHeight : currentDisplay.height
+      this.containerHeight = Math.max(this.getUIContext().px2vp(displayHeight), this.expandedHeight, this.getSafeCollapsedHeight())
+    } catch (_error) {
+      this.containerHeight = Math.max(this.containerHeight, this.expandedHeight, this.getSafeCollapsedHeight())
+    }
+  }
+
+  private handleInitialExpandedChange(): void {
+    const nextHeight = this.initialExpanded ? this.getSafeExpandedHeight() : this.getSafeCollapsedHeight()
+    if (this.isExpanded === this.initialExpanded && this.drawerHeight === nextHeight) {
+      return
+    }
+    this.getUIContext().animateTo({
+      duration: this.animationDuration,
+      curve: Curve.EaseOut
+    }, () => {
+      this.isExpanded = this.initialExpanded
+      this.updateHeight(nextHeight)
+    })
+  }
+
   private getSafeCollapsedHeight(): number {
-    return Math.max(this.collapsedHeight, 0)
+    const minimumHeaderHeight = (this.showHandle ? DRAWER_DEFAULT_HANDLE_AREA_HEIGHT : 0) + this.titleHeight
+    return Math.max(this.collapsedHeight, minimumHeaderHeight, 0)
   }
 
   private getSafeExpandedHeight(): number {
@@ -101,8 +102,26 @@ export struct WorkbenchDrawer {
     return Math.max(safeExpandedHeight, this.getSafeCollapsedHeight())
   }
 
-  private isTouchInDragHeader(touchY: number): boolean {
-    return touchY <= DRAWER_DEFAULT_HANDLE_AREA_HEIGHT + this.titleHeight
+  private normalizeSizeToNumber(value: Length | undefined): number {
+    if (value === undefined) {
+      return this.containerHeight
+    }
+    if (typeof value === 'number') {
+      return value
+    }
+    return this.containerHeight
+  }
+
+  private getOverlayHeight(): Length {
+    return this.showMask ? '100%' : this.drawerHeight
+  }
+
+  private getHeaderHeight(): number {
+    return (this.showHandle ? DRAWER_DEFAULT_HANDLE_AREA_HEIGHT : 0) + this.titleHeight
+  }
+
+  private shouldRenderContent(): boolean {
+    return this.drawerHeight > this.getHeaderHeight() + 1
   }
 
   private updateHeight(nextHeight: number): void {
@@ -111,7 +130,7 @@ export struct WorkbenchDrawer {
   }
 
   private animateToState(nextExpanded: boolean): void {
-    animateTo({
+    this.getUIContext().animateTo({
       duration: this.animationDuration,
       curve: Curve.EaseOut
     }, () => {
@@ -152,39 +171,46 @@ export struct WorkbenchDrawer {
     this.animateToState(this.shouldExpandByHalf())
   }
 
-  private handleDrawerTouch(event: TouchEvent): void {
-    if (!this.enableDrag || !event.touches || event.touches.length === 0) {
+  private syncDrawerHeightWithState(): void {
+    this.drawerHeight = this.isExpanded ? this.getSafeExpandedHeight() : this.getSafeCollapsedHeight()
+  }
+
+  private beginHeaderPan(): void {
+    if (!this.enableDrag) {
       return
     }
-    const touchY = event.touches[0].y
-    if (event.type === TouchType.Down) {
-      if (!this.enableContentDrag && !this.isTouchInDragHeader(touchY)) {
-        return
-      }
-      this.touchStartY = touchY
-      this.dragStartHeight = this.drawerHeight
-      this.lastOffsetY = 0
+    this.dragStartHeight = this.drawerHeight
+    this.lastOffsetY = 0
+    this.isDragging = true
+  }
+
+  private updateHeaderPan(offsetY: number): void {
+    if (!this.enableDrag || !this.isDragging) {
+      return
+    }
+    this.lastOffsetY = offsetY
+    this.updateHeight(this.dragStartHeight - offsetY)
+  }
+
+  private endHeaderPan(offsetY: number): void {
+    if (!this.enableDrag || !this.isDragging) {
       this.isDragging = false
-      event.stopPropagation()
       return
     }
-    if (event.type === TouchType.Move) {
-      const offsetY = touchY - this.touchStartY
-      this.lastOffsetY = offsetY
-      if (Math.abs(offsetY) > this.dragThreshold) {
-        this.isDragging = true
-      }
-      this.updateHeight(this.dragStartHeight - offsetY)
-      event.stopPropagation()
+    this.lastOffsetY = offsetY
+    this.settleDrawer()
+    this.isDragging = false
+  }
+
+  private handleOverlaySizeChange(newValue: SizeOptions): void {
+    if (!shouldSyncOverlaySize(this.showMask, this.isDragging)) {
       return
     }
-    if (event.type === TouchType.Up || event.type === TouchType.Cancel) {
-      if (this.isDragging) {
-        this.settleDrawer()
-      }
-      this.isDragging = false
-      event.stopPropagation()
+    const nextContainerHeight = this.normalizeSizeToNumber(newValue.height)
+    if (nextContainerHeight > this.getSafeCollapsedHeight()) {
+      this.containerHeight = Math.max(nextContainerHeight, this.expandedHeight, this.getSafeCollapsedHeight())
     }
+    this.syncDrawerHeightWithState()
   }
 
   @Builder
@@ -230,6 +256,36 @@ export struct WorkbenchDrawer {
   }
 
   @Builder
+  HeaderBuilder() {
+    Column() {
+      this.HandleBuilder()
+      this.TitleBuilder()
+    }
+    .width('100%')
+    .height(this.getHeaderHeight())
+    .onClick(() => {
+      if (this.enableTitleTapToggle && !this.isDragging) {
+        this.animateToState(!this.isExpanded)
+      }
+    })
+    .gesture(
+      PanGesture({ fingers: 1, direction: PanDirection.Vertical })
+        .onActionStart((_event: GestureEvent) => {
+          this.beginHeaderPan()
+        })
+        .onActionUpdate((event: GestureEvent) => {
+          this.updateHeaderPan(event.offsetY)
+        })
+        .onActionEnd((event: GestureEvent) => {
+          this.endHeaderPan(event.offsetY)
+        })
+        .onActionCancel(() => {
+          this.isDragging = false
+        })
+    )
+  }
+
+  @Builder
   DefaultContentBuilder() {
     Column() {
       Text(this.contentText)
@@ -245,7 +301,7 @@ export struct WorkbenchDrawer {
   }
 
   @Builder
-  ContentBuilder() {
+  RawContentBuilder() {
     if (this.contentBuilder) {
       this.contentBuilder()
     } else {
@@ -254,32 +310,39 @@ export struct WorkbenchDrawer {
   }
 
   @Builder
-  DrawerPanelBuilder() {
-    Column() {
-      this.HandleBuilder()
-      this.TitleBuilder()
-      this.ContentBuilder()
+  ContentBuilder() {
+    if (this.shouldRenderContent()) {
+      if (this.enableContentDrag) {
+        Column() {
+          this.RawContentBuilder()
+        }
+        .width('100%')
+        .layoutWeight(1)
+        .gesture(
+          PanGesture({ fingers: 1, direction: PanDirection.Vertical })
+            .onActionStart((_event: GestureEvent) => {
+              this.beginHeaderPan()
+            })
+            .onActionUpdate((event: GestureEvent) => {
+              this.updateHeaderPan(event.offsetY)
+            })
+            .onActionEnd((event: GestureEvent) => {
+              this.endHeaderPan(event.offsetY)
+            })
+            .onActionCancel(() => {
+              this.isDragging = false
+            })
+        )
+      } else {
+        this.RawContentBuilder()
+      }
     }
-    .width(this.drawerWidth)
-    .height(this.drawerHeight)
-    .backgroundColor(this.drawerBackgroundColor)
-    .borderRadius({ topLeft: this.drawerBorderRadius, topRight: this.drawerBorderRadius })
-    .shadow({
-      radius: DRAWER_DEFAULT_SHADOW_RADIUS,
-      color: this.shadowColor,
-      offsetX: 0,
-      offsetY: DRAWER_DEFAULT_SHADOW_OFFSET_Y
-    })
-    .clip(true)
-    .onTouch((event: TouchEvent) => {
-      this.handleDrawerTouch(event)
-    })
   }
 
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
-      if (this.showMask && this.isExpanded) {
-        Row()
+      if (this.showMask && this.drawerHeight > this.getSafeCollapsedHeight()) {
+        Blank()
           .width('100%')
           .height('100%')
           .backgroundColor(this.maskColor)
@@ -290,13 +353,29 @@ export struct WorkbenchDrawer {
             }
           })
       }
-      this.DrawerPanelBuilder()
+
+      Column() {
+        this.HeaderBuilder()
+        this.ContentBuilder()
+      }
+      .width(this.drawerWidth)
+      .height(this.drawerHeight)
+      .backgroundColor(this.drawerBackgroundColor)
+      .backgroundBlurStyle(BlurStyle.Regular)
+      .borderRadius({ topLeft: this.drawerBorderRadius, topRight: this.drawerBorderRadius })
+      .border({ width: 1, color: '#8FFFFFFF' })
+      .clip(true)
+      .shadow({
+        radius: DRAWER_DEFAULT_SHADOW_RADIUS,
+        color: this.shadowColor,
+        offsetX: 0,
+        offsetY: DRAWER_DEFAULT_SHADOW_OFFSET_Y
+      })
     }
     .width('100%')
-    .height('100%')
-    .onAreaChange((_oldArea: Area, newArea: Area) => {
-      this.containerHeight = Number(newArea.height)
-      this.updateHeight(this.isExpanded ? this.getSafeExpandedHeight() : this.getSafeCollapsedHeight())
+    .height(this.getOverlayHeight())
+    .onSizeChange((_oldValue: SizeOptions, newValue: SizeOptions) => {
+      this.handleOverlaySizeChange(newValue)
     })
   }
 }
