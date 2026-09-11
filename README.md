@@ -18,22 +18,11 @@
 - 手势更安全：内容区默认不接管拖拽，按钮、列表、横向滑动和主页面滚动都能优先响应。
 - 动画更稳定：拖拽期间不会因外层尺寸变化反复重置抽屉高度，减少上拉下拉卡顿与跳动。
 - 尺寸配置：支持设置收起高度、展开高度、最大高度比例和抽屉宽度。
-- 无业务依赖：不依赖接口、不依赖宿主工程资源、不依赖三方包。
-- 适配三方库发布：包含 `oh-package.json5`、`Index.ets`、`README.md`、`CHANGELOG.md`、`LICENSE`。
+- 轻量接入：无额外三方依赖，适合直接放入 ArkUI 页面组合使用。
 
 ## 安装
 
-本地源码依赖：
-
-```json5
-{
-  "dependencies": {
-    "workbench-drawer": "file:../drawer"
-  }
-}
-```
-
-发布到 ohpm 后，可通过以下命令安装：
+通过 ohpm 安装：
 
 ```bash
 ohpm install workbench-drawer
@@ -193,14 +182,6 @@ WorkbenchDrawer({
 | `DrawerSnapMode.Direction` | 松手后按拖动方向展开或收起 |
 | `DrawerSnapMode.Half` | 松手后超过展开高度一半则展开，否则收起 |
 | `DrawerSnapMode.DirectionAndHalf` | 优先响应明显拖动方向，否则按一半高度吸附 |
-
-## 三方库上架前检查
-
-- `oh-package.json5` 中 `name/version/main/license/description` 已配置。
-- `README.md`、`CHANGELOG.md`、`LICENSE` 已提供且非空。
-- `Index.ets` 统一导出对外 API。
-- 源码不依赖宿主工程业务接口、业务资源和私有工具类。
-- 发布前建议先生成 HAR 或 tgz 包，再执行 `ohpm prepublish <har_or_tgz_file>` 或平台要求的本地校验命令。
 
 ## 兼容性
 
