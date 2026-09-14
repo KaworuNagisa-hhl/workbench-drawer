@@ -4,7 +4,7 @@
 
 ## 实际运行效果
 
-下面是组件在业务页面中的底部抽屉形态，包含收起、拖拽中、展开三种状态：
+下面是组件与同系列 like-ios 组件保持一致的黑色毛玻璃展示效果，包含收起、拖拽中、展开三种状态：
 
 ![workbench drawer preview](https://cdn.jsdelivr.net/gh/KaworuNagisa-hhl/workbench-drawer@main/docs/workbench-drawer-preview.gif)
 
@@ -75,7 +75,7 @@ struct TaskWorkbenchPage {
 
 ## 自定义品牌样式
 
-抽屉默认使用 like-ios 半透明毛玻璃面板。业务方可以覆盖面板宽高、背景色、圆角、内边距、阴影、遮罩和吸附行为。
+抽屉默认使用 like-ios 半透明毛玻璃面板。业务方可以覆盖面板宽高、背景色、圆角、内边距、阴影、遮罩和吸附行为，也可以按展示页中的深色 token 风格接入。
 
 ## 自定义标题区域与内容区域
 
