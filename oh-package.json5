@@ -9,15 +9,15 @@
   "repository": "https://github.com/KaworuNagisa-hhl/workbench-drawer",
   "license": "Apache-2.0",
   "keywords": [
-    "OpenHarmony",
-    "HarmonyOS",
-    "ArkUI",
-    "like-ios",
-    "ios-like",
-    "kaworunagisa_hhl",
+    "openharmony",
+    "harmonyos",
+    "arkui",
+    "ui",
+    "component",
     "drawer",
-    "bottom-sheet",
-    "draggable",
+    "sheet",
+    "panel",
+    "gesture",
     "workbench"
   ],
   "dependencies": {}
