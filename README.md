@@ -25,13 +25,13 @@
 通过 ohpm 安装：
 
 ```bash
-ohpm install workbench-drawer
+ohpm install @kaworunagisa_hhl/workbench-drawer
 ```
 
 也可以使用简写命令：
 
 ```bash
-ohpm i workbench-drawer
+ohpm i @kaworunagisa_hhl/workbench-drawer
 ```
 
 ## 正常使用样式
@@ -42,7 +42,7 @@ ohpm i workbench-drawer
 import {
   WorkbenchDrawer,
   DrawerSnapMode
-} from 'workbench-drawer'
+} from '@kaworunagisa_hhl/workbench-drawer'
 ```
 
 ```ts

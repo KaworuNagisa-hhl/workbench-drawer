@@ -1,6 +1,6 @@
 {
   "modelVersion": "6.0.2",
-  "name": "workbench-drawer",
+  "name": "@kaworunagisa_hhl/workbench-drawer",
   "version": "1.0.8",
   "description": "适用于 OpenHarmony/HarmonyOS ArkUI 的 like-ios 毛玻璃底部抽屉组件，优化上拉下拉吸附动画、主页面滚动隔离与内容区点击体验，支持自定义颜色/宽高/圆角，兼容 HarmonyOS API 12 及以上版本。",
   "main": "Index.ets",
@@ -12,12 +12,13 @@
     "OpenHarmony",
     "HarmonyOS",
     "ArkUI",
-    "drawer",
     "like-ios",
     "ios-like",
-    "frosted-glass",
+    "kaworunagisa_hhl",
+    "drawer",
     "bottom-sheet",
-    "draggable"
+    "draggable",
+    "workbench"
   ],
   "dependencies": {}
 }
