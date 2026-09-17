@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.9
+
+- 恢复 `workbench-drawer` 主包维护口径，安装、导入、README 和示例统一使用非 scoped 包名。
+- 移除对 scoped 包入口的发布依赖，保持 ohpm 主包、GitHub 仓库和 CDN 预览链接一致。
+- 保留同系列黑色毛玻璃动态预览图和底部抽屉交互说明。
+
 ## 1.0.8
 
 - 更新 README 效果预览为同系列黑色毛玻璃展示风格。
