@@ -82,7 +82,7 @@ export DEVECO_SDK_HOME='/Applications/DevEco-Studio.app/Contents/sdk'
 在页面中导入：
 
 ```ts
-import { WorkbenchDrawer, DrawerSnapMode } from '@kaworunagisa_hhl/workbench-drawer'
+import { WorkbenchDrawer, DrawerSnapMode } from 'workbench-drawer'
 ```
 
 最小接入方式：
